@@ -1,7 +1,5 @@
 package rifu.demo.sequencialMultiThread.service;
 
-import rifu.demo.sequencialMultiThread.Application;
-
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -23,9 +21,7 @@ public class Washing implements Runnable {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                }
-
-                if (action.intValue() == 0) {
+                } else {
                     try {
                         System.out.println("Washing start");
                         TimeUnit.SECONDS.sleep(1);

@@ -23,8 +23,7 @@ public class Waxing implements Runnable {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                }
-                if (action.intValue() == 1) {
+                } else {
                     try {
                         System.out.println("Waxing start");
                         TimeUnit.SECONDS.sleep(1);
