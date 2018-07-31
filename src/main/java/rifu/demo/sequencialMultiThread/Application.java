@@ -15,8 +15,8 @@ public class Application {
 
         Long start = System.currentTimeMillis();
 
-        Runnable waxing = new Waxing(CURRENT_ACTION);
-        Runnable washing = new Washing(CURRENT_ACTION);
+        Runnable waxing = new Waxing(CURRENT_ACTION, "Waxing");
+        Runnable washing = new Washing(CURRENT_ACTION, "Washing");
         EXECUTOR_SERVICE.execute(waxing);
         EXECUTOR_SERVICE.execute(washing);
 

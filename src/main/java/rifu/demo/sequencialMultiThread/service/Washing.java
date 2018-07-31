@@ -5,27 +5,31 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Washing implements Runnable {
 
-    private AtomicInteger action;
+    public final static Integer ACTION_CODE = 0;
 
-    public Washing(AtomicInteger action) {
+    private AtomicInteger action;
+    private String message;
+
+    public Washing(AtomicInteger action, String message) {
         this.action = action;
+        this.message = message;
     }
 
     @Override
     public void run() {
         synchronized (action) {
             for (; ; ) {
-                if (action.intValue() != 0) {
+                if (action.intValue() != ACTION_CODE) {
                     try {
                         action.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                } else {
+                } else if (action.intValue() == ACTION_CODE) {
                     try {
-                        System.out.println("Washing start");
+                        System.out.println(message + " start");
                         TimeUnit.SECONDS.sleep(1);
-                        System.out.println("Washing end\n");
+                        System.out.println(message + " end\n");
 
                         action.incrementAndGet();
 
@@ -33,6 +37,8 @@ public class Washing implements Runnable {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                } else {
+                    System.out.println("Unrecognized Action code");
                 }
             }
         }

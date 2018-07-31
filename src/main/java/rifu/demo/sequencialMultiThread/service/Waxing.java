@@ -5,27 +5,31 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Waxing implements Runnable {
 
-    private AtomicInteger action;
+    public final static Integer ACTION_CODE = 1;
 
-    public Waxing(AtomicInteger action) {
+    private AtomicInteger action;
+    private String message;
+
+    public Waxing(AtomicInteger action, String message) {
         this.action = action;
+        this.message = message;
     }
 
     @Override
     public void run() {
         synchronized (action) {
             for (; ; ) {
-                if (action.intValue() != 1) {
+                if (action.intValue() != ACTION_CODE) {
                     try {
                         action.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                } else {
+                } else if (action.intValue() == ACTION_CODE) {
                     try {
-                        System.out.println("Waxing start");
+                        System.out.println(message + " start");
                         TimeUnit.SECONDS.sleep(1);
-                        System.out.println("Waxing end\n");
+                        System.out.println(message + " end\n");
 
                         action.decrementAndGet();
 
@@ -33,6 +37,8 @@ public class Waxing implements Runnable {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                } else {
+                    System.out.println("Unrecognized Action code");
                 }
             }
         }
