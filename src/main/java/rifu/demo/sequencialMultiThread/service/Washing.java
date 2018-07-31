@@ -2,38 +2,38 @@ package rifu.demo.sequencialMultiThread.service;
 
 import rifu.demo.sequencialMultiThread.Application;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Washing implements Runnable {
 
-    Object lock;
+    private AtomicInteger action;
 
-    public Washing(Object lock) {
-        this.lock = lock;
+    public Washing(AtomicInteger actoin) {
+        this.action = actoin;
     }
 
     @Override
     public void run() {
-        synchronized (lock) {
+        synchronized (action) {
             for (; ; ) {
-                while (Application.action.intValue() != 0) {
+                if (action.intValue() != 0) {
                     try {
-                        lock.wait();
+                        action.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
 
-                if (Application.action.intValue() == 0) {
+                if (action.intValue() == 0) {
                     try {
                         System.out.println("Washing start");
                         TimeUnit.SECONDS.sleep(1);
-                        System.out.println("Washing end");
+                        System.out.println("Washing end\n");
 
-                        Application.action.incrementAndGet();
+                        action.incrementAndGet();
 
-                        lock.notify();
+                        action.notify();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

@@ -2,37 +2,37 @@ package rifu.demo.sequencialMultiThread.service;
 
 import rifu.demo.sequencialMultiThread.Application;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Waxing implements Runnable {
 
-    Object lock;
+    private AtomicInteger action;
 
-    public Waxing(Object lock) {
-        this.lock = lock;
+    public Waxing(AtomicInteger action) {
+        this.action = action;
     }
 
     @Override
     public void run() {
-        synchronized (lock) {
+        synchronized (action) {
             for (; ; ) {
-                while (Application.action.intValue() != 1) {
+                if (action.intValue() != 1) {
                     try {
-                        lock.wait();
+                        action.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-                if (Application.action.intValue() == 1) {
+                if (action.intValue() == 1) {
                     try {
                         System.out.println("Waxing start");
                         TimeUnit.SECONDS.sleep(1);
-                        System.out.println("Waxing end");
+                        System.out.println("Waxing end\n");
 
-                        Application.action.decrementAndGet();
+                        action.decrementAndGet();
 
-                        lock.notify();
+                        action.notify();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
