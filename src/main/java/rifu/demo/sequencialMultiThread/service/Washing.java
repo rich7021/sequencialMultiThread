@@ -9,8 +9,8 @@ public class Washing implements Runnable {
 
     private AtomicInteger action;
 
-    public Washing(AtomicInteger actoin) {
-        this.action = actoin;
+    public Washing(AtomicInteger action) {
+        this.action = action;
     }
 
     @Override
