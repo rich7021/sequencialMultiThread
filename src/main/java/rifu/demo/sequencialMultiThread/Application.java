@@ -3,8 +3,7 @@ package rifu.demo.sequencialMultiThread;
 import rifu.demo.sequencialMultiThread.service.Washing;
 import rifu.demo.sequencialMultiThread.service.Waxing;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,21 +16,15 @@ public class Application {
 
         Long start = System.currentTimeMillis();
 
-        Waxing waxing = new Waxing();
-        Washing washing = new Washing();
-        Set<Runnable> todo = new HashSet();
-        todo.add(washing, waxing);
-        executorService.invokeAll(todo);
+        Object lock = new Object();
+
+        Runnable waxing = new Waxing(lock);
+        Runnable washing = new Washing(lock);
+        executorService.execute(waxing);
+        executorService.execute(washing);
 
         for (; ; ) {
-            if (action.intValue() == 1) {
-                washing.wait();
-                waxing.notify();
-            } else {
-                waxing.wait();
-                washing.notify();
-            }
-
+            Map threads = Thread.getAllStackTraces();
             if (System.currentTimeMillis() - start > 180_000) {
                 executorService.shutdownNow();
                 break;
