@@ -1,7 +1,7 @@
-package ridu.demo.sequencialMultiThread;
+package rifu.demo.sequencialMultiThread;
 
-import ridu.demo.sequencialMultiThread.service.Washing;
-import ridu.demo.sequencialMultiThread.service.Waxing;
+import rifu.demo.sequencialMultiThread.service.Washing;
+import rifu.demo.sequencialMultiThread.service.Waxing;
 
 import java.util.HashSet;
 import java.util.Set;

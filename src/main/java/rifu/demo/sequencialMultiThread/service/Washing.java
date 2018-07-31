@@ -1,6 +1,6 @@
-package ridu.demo.sequencialMultiThread.service;
+package rifu.demo.sequencialMultiThread.service;
 
-import ridu.demo.sequencialMultiThread.Application;
+import rifu.demo.sequencialMultiThread.Application;
 
 import java.util.concurrent.TimeUnit;
 
