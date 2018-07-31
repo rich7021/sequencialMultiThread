@@ -1,7 +1,5 @@
 package rifu.demo.sequencialMultiThread.service;
 
-import rifu.demo.sequencialMultiThread.Application;
-
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
