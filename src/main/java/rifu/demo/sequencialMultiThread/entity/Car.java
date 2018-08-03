@@ -1,4 +1,4 @@
-package rifu.demo.sequencialMultiThread.service;
+package rifu.demo.sequencialMultiThread.entity;
 
 import rifu.demo.sequencialMultiThread.enumeration.CarStatus;
 

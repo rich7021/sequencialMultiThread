@@ -1,24 +1,22 @@
 package rifu.demo.sequencialMultiThread.service;
 
+import rifu.demo.sequencialMultiThread.entity.Car;
 import rifu.demo.sequencialMultiThread.enumeration.CarStatus;
 
-public class Washing implements Runnable {
+public class WashingMachine extends ServiceBase {
 
-    private Services services;
-    private boolean isRunning = true;
-
-    public Washing(Services services) {
-        this.services = services;
+    public WashingMachine(Shop shop) {
+        super(shop);
     }
 
     @Override
     public void run() {
         while (isRunning) {
-            Car carToBeServiced = services.getNextServiceCar(CarStatus.WASH);
+            Car carToBeServiced = shop.getNextServiceCar(CarStatus.WASH);
             try {
                 if (carToBeServiced != null) {
-                    services.wash(carToBeServiced);
-                    services.waitNext(carToBeServiced);
+                    shop.wash(carToBeServiced);
+                    shop.waitNext(carToBeServiced);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

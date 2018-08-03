@@ -1,30 +1,30 @@
 package rifu.demo.sequencialMultiThread.service;
 
+import rifu.demo.sequencialMultiThread.entity.Car;
 import rifu.demo.sequencialMultiThread.enumeration.CarStatus;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-public class Services {
+public class Shop {
 
-    private List<Car> carsToBeServiced = new ArrayList<>();
+    private List<Car> carsToBeServiced;
 
-    public Services(List<Car> carsToBeServiced) {
+    public Shop(List<Car> carsToBeServiced) {
         this.carsToBeServiced = carsToBeServiced;
     }
 
-    public Car getNextServiceCar(CarStatus serviceStatus) {
+    public Car getNextServiceCar(CarStatus carStatus) {
         Optional<Car> optional =
-                carsToBeServiced.stream().filter(o -> o.getStatus().equals(serviceStatus))
+                carsToBeServiced.stream().filter(o -> o.getStatus().equals(carStatus))
                         .findFirst();
         return optional.orElse(null);
     }
 
     public synchronized void wash(Car car) throws InterruptedException {
         System.out.print(car.getName() + " wash start");
-        TimeUnit.SECONDS.sleep(5);
+        TimeUnit.MILLISECONDS.sleep(100);
         CarStatus nextStatus = CarStatus.getNextStatus(car.getStatus());
         car.setStatus(nextStatus);
         System.out.println(" end");
@@ -33,7 +33,7 @@ public class Services {
 
     public synchronized void wax(Car car) throws InterruptedException {
         System.out.print(car.getName() + " wax start");
-        TimeUnit.SECONDS.sleep(1);
+        TimeUnit.MILLISECONDS.sleep(100);
         CarStatus nextStatus = CarStatus.getNextStatus(car.getStatus());
         car.setStatus(nextStatus);
         System.out.println(" end");

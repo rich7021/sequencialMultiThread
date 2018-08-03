@@ -1,11 +1,9 @@
 package rifu.demo.sequencialMultiThread;
 
-import rifu.demo.sequencialMultiThread.service.Car;
-import rifu.demo.sequencialMultiThread.service.Services;
-import rifu.demo.sequencialMultiThread.service.Washing;
-import rifu.demo.sequencialMultiThread.service.Waxing;
+import rifu.demo.sequencialMultiThread.entity.Car;
+import rifu.demo.sequencialMultiThread.service.*;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
@@ -14,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Application {
     public static int CAR_AMOUNT = 1;
-    public static ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
+    public static ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(2);
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -23,22 +21,13 @@ public class Application {
             cars.add(new Car("car" + i, null));
         }
 
-        Collections.synchronizedCollection(cars);
+        Shop shop = new Shop(cars);
+        List<ServiceBase> services =
+                Arrays.asList(new WaxingMachine(shop), new WashingMachine(shop));
+        services.forEach(o -> EXECUTOR_SERVICE.execute(o));
 
-        Services services = new Services(cars);
-
-        Runnable waxing = new Waxing(services);
-        Runnable washing = new Washing(services);
-        EXECUTOR_SERVICE.execute(waxing);
-        EXECUTOR_SERVICE.execute(washing);
-
-
-        EXECUTOR_SERVICE.awaitTermination(30, TimeUnit.SECONDS);
-
-
-        ((Washing) washing).terminate();
-        ((Waxing) waxing).terminate();
-
+        EXECUTOR_SERVICE.awaitTermination(10, TimeUnit.SECONDS);
+        services.forEach(o -> o.terminate());
         EXECUTOR_SERVICE.shutdown();
 
         cars.forEach(car -> System.out.println(car.getName() + " " + car.getStatus()));
